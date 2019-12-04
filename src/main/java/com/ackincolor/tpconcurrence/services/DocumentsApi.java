@@ -18,6 +18,7 @@ import javax.validation.constraints.*;
 import java.util.List;
 
 import com.ackincolor.tpconcurrence.entities.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 @Api(value = "documents", description = "the documents API")
 public interface DocumentsApi {
@@ -28,7 +29,8 @@ public interface DocumentsApi {
             @ApiResponse(code = 200, message = "le document demandé", response = Document.class),
             @ApiResponse(code = 404, message = "le document n'existe pas", response = ErrorDefinition.class) })
     @RequestMapping(value = "/documents/{documentId}",
-            method = RequestMethod.GET)
+            method = RequestMethod.GET,
+            produces = "application/json")
     ResponseEntity<Document> documentsDocumentIdGet(@ApiParam(value = "identifiant du document",required=true) @PathVariable("documentId") String documentId);
 
 
@@ -36,7 +38,8 @@ public interface DocumentsApi {
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "le verrou est supprimé") })
     @RequestMapping(value = "/documents/{documentId}/lock",
-            method = RequestMethod.DELETE)
+            method = RequestMethod.DELETE,
+            produces = "application/json")
     ResponseEntity<Void> documentsDocumentIdLockDelete(@ApiParam(value = "identifiant du document",required=true) @PathVariable("documentId") String documentId);
 
 
@@ -45,7 +48,8 @@ public interface DocumentsApi {
             @ApiResponse(code = 200, message = "le verrou posé", response = Lock.class),
             @ApiResponse(code = 204, message = "aucun verrou posé") })
     @RequestMapping(value = "/documents/{documentId}/lock",
-            method = RequestMethod.GET)
+            method = RequestMethod.GET,
+            produces = "application/json")
     ResponseEntity<Lock> documentsDocumentIdLockGet(@ApiParam(value = "identifiant du document",required=true) @PathVariable("documentId") String documentId);
 
 
@@ -54,7 +58,8 @@ public interface DocumentsApi {
             @ApiResponse(code = 200, message = "le verrou est posé", response = Lock.class),
             @ApiResponse(code = 409, message = "un verrou est déjà posé, retourne le verrou déjà posé", response = Lock.class) })
     @RequestMapping(value = "/documents/{documentId}/lock",
-            method = RequestMethod.PUT)
+            method = RequestMethod.PUT,
+            produces = "application/json")
     ResponseEntity<Lock> documentsDocumentIdLockPut(@ApiParam(value = "identifiant du document",required=true) @PathVariable("documentId") String documentId,@ApiParam(value = "l'objet verrou posé"  )  @Valid @RequestBody Lock lock);
 
     //ok
@@ -62,7 +67,8 @@ public interface DocumentsApi {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "le document est mis à jour", response = Document.class) })
     @RequestMapping(value = "/documents/{documentId}",
-            method = RequestMethod.POST)
+            method = RequestMethod.POST,
+            produces = "application/json")
     ResponseEntity<Document> documentsDocumentIdPost(@ApiParam(value = "identifiant du document",required=true) @PathVariable("documentId") String documentId,@ApiParam(value = "met à jour le texte, le titre, l'editeur et la date de mise à jour"  )  @Valid @RequestBody Document document);
 
     //ok
@@ -70,7 +76,8 @@ public interface DocumentsApi {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "la liste des documents", response = DocumentsList.class) })
     @RequestMapping(value = "/documents",
-            method = RequestMethod.GET)
+            method = RequestMethod.GET,
+            produces = "application/json")
     ResponseEntity<DocumentsList> documentsGet(@ApiParam(value = "numéro de la page à retourner") @Valid @RequestParam(value = "page", required = false) Integer page,@ApiParam(value = "nombre de documents par page") @Valid @RequestParam(value = "pageSize", required = false) Integer pageSize);
 
 
@@ -80,7 +87,8 @@ public interface DocumentsApi {
             @ApiResponse(code = 201, message = "le document créé", response = Document.class),
             @ApiResponse(code = 400, message = "le contenu n'est pas correction", response = ErrorDefinition.class) })
     @RequestMapping(value = "/documents",
-            method = RequestMethod.POST)
-    ResponseEntity<Document> documentsPost(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Document document);
+            method = RequestMethod.POST,
+            produces = "application/json")
+    ResponseEntity<Document> documentsPost(@ApiParam(value = "Document" ,required=true )  @Valid @RequestBody Document document);
 
 }

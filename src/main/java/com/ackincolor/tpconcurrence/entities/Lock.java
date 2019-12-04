@@ -4,7 +4,10 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.springframework.data.annotation.Id;
+
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * un verrou
@@ -17,6 +20,10 @@ public class Lock   {
 
   @JsonProperty("created")
   private Date created = null;
+
+  @Id
+  @JsonProperty("Id")
+  private String id;
 
   public Lock owner(String owner) {
     this.owner = owner;

@@ -6,8 +6,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.models.auth.In;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.validation.annotation.Validated;
+
+import static org.springframework.data.mongodb.core.mapping.FieldType.TIMESTAMP;
 
 /**
  * résumé d&#39;un document
@@ -20,9 +24,11 @@ public class DocumentSummary   {
   @JsonProperty("documentId")
   protected String documentId = null;
 
+  @CreatedDate
   @JsonProperty("created")
   protected Date created = null;
 
+  @LastModifiedDate
   @JsonProperty("updated")
   protected Date updated = null;
 
@@ -77,6 +83,8 @@ public class DocumentSummary   {
     return this;
   }
   public Integer getEtag(){
+    if(this.etag == null)
+      return 0;
     return this.etag;
   }
 

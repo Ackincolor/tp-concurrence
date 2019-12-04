@@ -10,8 +10,6 @@ import org.springframework.validation.annotation.Validated;
 /**
  * ErrorDefinitionErrors
  */
-@Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-12-03T07:23:42.205Z")
 
 public class ErrorDefinitionErrors   {
   @JsonProperty("errorCode")

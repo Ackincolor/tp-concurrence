@@ -116,6 +116,8 @@ public class DocumentsApiController implements DocumentsApi {
                         return new ResponseEntity<Document>(document, HttpStatus.CONFLICT);
                     }else {
                         document.setUpdated(new Date(System.currentTimeMillis()));
+                        document.setDocumentId(documentId);
+                        document.setEtag(document.getEtag()+1);
                         this.documentRepository.save(document);
                         return new ResponseEntity<Document>(document, HttpStatus.OK);
                     }
@@ -153,15 +155,13 @@ public class DocumentsApiController implements DocumentsApi {
         return new ResponseEntity<DocumentsList>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<Document> documentsPost(@ApiParam(value = "" ,required=true ) @RequestBody Document document) {
+    public ResponseEntity<Document> documentsPost(@ApiParam(value = "Document" ,required=true ) @RequestBody Document document) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
                 //creation du document
                 UUID uuid = UUID.randomUUID();
                 document.setDocumentId(uuid.toString());
-                document.setCreated(new Date(System.currentTimeMillis()));
-                document.setUpdated(new Date(System.currentTimeMillis()));
                 document.setEtag(0);
                 this.documentRepository.save(document);
                 return new ResponseEntity<Document>(document, HttpStatus.OK);
