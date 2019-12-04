@@ -18,8 +18,8 @@ public class Document extends DocumentSummary {
   private String editor;
   private String body;
 
-  public Document(String documentId, Date created, Date updated, String title, String creator, String editor, String body) {
-    super(documentId,created,updated,title);
+  public Document(String documentId, Date created, Date updated, String title, String creator, String editor, String body, Integer etag) {
+    super(documentId,created,updated,title,etag);
     this.creator = creator;
     this.editor = editor;
     this.body = body;

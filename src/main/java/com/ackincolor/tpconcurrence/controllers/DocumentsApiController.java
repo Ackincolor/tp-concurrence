@@ -61,7 +61,11 @@ public class DocumentsApiController implements DocumentsApi {
 
     public ResponseEntity<Void> documentsDocumentIdLockDelete(@ApiParam(value = "identifiant du document",required=true) @PathVariable("documentId") String documentId) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+        if (accept != null && accept.contains("application/json")) {
+            Lock l = this.lockList.remove(documentId);
+            return (l==null)? new ResponseEntity<Void>(HttpStatus.NO_CONTENT) :  new ResponseEntity<Void>(HttpStatus.OK) ;
+        }
+        return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
     }
 
     public ResponseEntity<Lock> documentsDocumentIdLockGet(@ApiParam(value = "identifiant du document",required=true) @PathVariable("documentId") String documentId) {
@@ -83,9 +87,13 @@ public class DocumentsApiController implements DocumentsApi {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
-                lock.created(new Date(System.currentTimeMillis()));
-                Lock l = this.lockList.put(documentId,lock);
-                return (l==null)?new ResponseEntity<Lock>(lock,HttpStatus.OK) :new ResponseEntity<Lock>(lock, HttpStatus.CONFLICT);
+                if(this.documentRepository.findDocumentByDocumentId(documentId)!=null){
+                    lock.created(new Date(System.currentTimeMillis()));
+                    Lock l = this.lockList.put(documentId,lock);
+                    return (l==null)?new ResponseEntity<Lock>(lock,HttpStatus.OK) :new ResponseEntity<Lock>(lock, HttpStatus.CONFLICT);
+                }else {
+                    return new ResponseEntity<Lock>(lock,HttpStatus.NO_CONTENT);
+                }
             } catch (Exception e) {
                 log.error("Couldn't serialize response for content type application/json", e);
                 return new ResponseEntity<Lock>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -99,13 +107,18 @@ public class DocumentsApiController implements DocumentsApi {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
+                Document test = this.documentRepository.findDocumentByDocumentId(documentId);
                 Lock l = this.lockList.get(documentId);
                 //si l'editeur a posé un verou
-                if(l.getOwner().equals(document.getEditor())) {
-                    //mise a jour
-                    document.setUpdated(new Date(System.currentTimeMillis()));
-                    this.documentRepository.save(document);
-                    return new ResponseEntity<Document>(document, HttpStatus.OK);
+                if((l==null || l.getOwner().equals(document.getEditor()))&&test!=null) {
+                    //mise a jour avec verification de la version
+                    if(test.getEtag()>document.getEtag()){
+                        return new ResponseEntity<Document>(document, HttpStatus.CONFLICT);
+                    }else {
+                        document.setUpdated(new Date(System.currentTimeMillis()));
+                        this.documentRepository.save(document);
+                        return new ResponseEntity<Document>(document, HttpStatus.OK);
+                    }
                 }else{
                     return new ResponseEntity<Document>(document,HttpStatus.CONFLICT);
                 }
@@ -149,6 +162,7 @@ public class DocumentsApiController implements DocumentsApi {
                 document.setDocumentId(uuid.toString());
                 document.setCreated(new Date(System.currentTimeMillis()));
                 document.setUpdated(new Date(System.currentTimeMillis()));
+                document.setEtag(0);
                 this.documentRepository.save(document);
                 return new ResponseEntity<Document>(document, HttpStatus.OK);
             } catch (Exception e) {

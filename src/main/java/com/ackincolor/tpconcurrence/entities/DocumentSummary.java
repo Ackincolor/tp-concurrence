@@ -5,6 +5,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.models.auth.In;
 import org.springframework.data.annotation.Id;
 import org.springframework.validation.annotation.Validated;
 
@@ -28,17 +29,22 @@ public class DocumentSummary   {
   @JsonProperty("title")
   protected String title = null;
 
-    public DocumentSummary(String documentId, Date created, Date updated, String title) {
+  @JsonProperty("Etag")
+  protected Integer etag = null;
+
+    public DocumentSummary(String documentId, Date created, Date updated, String title, Integer etag) {
         this.documentId = documentId;
         this.created = created;
         this.updated = updated;
         this.title = title;
+        this.etag = etag;
     }
     public DocumentSummary(Document doc){
         this.documentId = doc.documentId;
         this.created = doc.created;
         this.updated = doc.updated;
         this.title = doc.title;
+        this.etag = doc.etag;
     }
 
     public DocumentSummary documentId(String documentId) {
@@ -64,6 +70,14 @@ public class DocumentSummary   {
   public DocumentSummary created(Date created) {
     this.created = created;
     return this;
+  }
+
+  public DocumentSummary setEtag(Integer etag){
+    this.etag = etag;
+    return this;
+  }
+  public Integer getEtag(){
+    return this.etag;
   }
 
   /**
