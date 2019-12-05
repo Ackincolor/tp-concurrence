@@ -30,8 +30,8 @@ public class DocumentsService {
     public Document saveDocument(Document document){
         UUID uuid = UUID.randomUUID();
         document.setDocumentId(uuid.toString());
-        document.setEtag(0);
-        this.documentRepository.save(document);
+        System.out.println(document);
+        this.documentRepository.insert(document);
         return  document;
     }
     public DocumentsList findAll() {
@@ -56,9 +56,7 @@ public class DocumentsService {
                 throw new ConflictException();
                 //return new ResponseEntity<Document>(document, HttpStatus.CONFLICT);
             }else {
-                document.setUpdated(new Date(System.currentTimeMillis()));
                 document.setDocumentId(documentId);
-                document.setEtag(document.getEtag()+1);
                 this.documentRepository.save(document);
                 return document;
             }

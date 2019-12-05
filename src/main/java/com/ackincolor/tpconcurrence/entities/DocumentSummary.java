@@ -9,6 +9,7 @@ import io.swagger.models.auth.In;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.annotation.Version;
 import org.springframework.validation.annotation.Validated;
 
 import static org.springframework.data.mongodb.core.mapping.FieldType.TIMESTAMP;
@@ -35,22 +36,21 @@ public class DocumentSummary   {
   @JsonProperty("title")
   protected String title = null;
 
+  @Version
   @JsonProperty("Etag")
-  protected Integer etag = null;
+  protected Long etag;
 
-    public DocumentSummary(String documentId, Date created, Date updated, String title, Integer etag) {
+    public DocumentSummary(String documentId, Date created, Date updated, String title) {
         this.documentId = documentId;
         this.created = created;
         this.updated = updated;
         this.title = title;
-        this.etag = etag;
     }
     public DocumentSummary(Document doc){
         this.documentId = doc.documentId;
         this.created = doc.created;
         this.updated = doc.updated;
         this.title = doc.title;
-        this.etag = doc.etag;
     }
 
     public DocumentSummary documentId(String documentId) {
@@ -78,13 +78,11 @@ public class DocumentSummary   {
     return this;
   }
 
-  public DocumentSummary setEtag(Integer etag){
+  public DocumentSummary setEtag(Long etag){
     this.etag = etag;
     return this;
   }
-  public Integer getEtag(){
-    if(this.etag == null)
-      return 0;
+  public Long getEtag(){
     return this.etag;
   }
 
