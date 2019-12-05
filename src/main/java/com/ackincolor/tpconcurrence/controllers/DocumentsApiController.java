@@ -3,6 +3,7 @@ package com.ackincolor.tpconcurrence.controllers;
 
 import com.ackincolor.tpconcurrence.exceptions.ConflictException;
 import com.ackincolor.tpconcurrence.exceptions.NoContentException;
+import com.ackincolor.tpconcurrence.exceptions.NotFoundException;
 import com.ackincolor.tpconcurrence.repositories.DocumentRepository;
 import com.ackincolor.tpconcurrence.services.DocumentsService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -51,7 +52,7 @@ public class DocumentsApiController implements DocumentsApi {
         this.lockList = new HashMap<>();
     }
 
-    public ResponseEntity<Document> documentsDocumentIdGet(@ApiParam(value = "identifiant du document",required=true) @PathVariable("documentId") String documentId) throws NoContentException{
+    public ResponseEntity<Document> documentsDocumentIdGet(@ApiParam(value = "identifiant du document",required=true) @PathVariable("documentId") String documentId) throws NotFoundException {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             return new ResponseEntity<>( this.documentsService.findDocumentById(documentId),HttpStatus.OK);

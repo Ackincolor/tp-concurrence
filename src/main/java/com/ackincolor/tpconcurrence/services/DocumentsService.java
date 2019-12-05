@@ -6,6 +6,7 @@ import com.ackincolor.tpconcurrence.entities.DocumentsList;
 import com.ackincolor.tpconcurrence.entities.Lock;
 import com.ackincolor.tpconcurrence.exceptions.ConflictException;
 import com.ackincolor.tpconcurrence.exceptions.NoContentException;
+import com.ackincolor.tpconcurrence.exceptions.NotFoundException;
 import com.ackincolor.tpconcurrence.repositories.DocumentRepository;
 import com.ackincolor.tpconcurrence.repositories.LockRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,10 +99,10 @@ public class DocumentsService {
             throw new NoContentException();
         }
     }
-    public Document findDocumentById(String documentId) throws NoContentException{
+    public Document findDocumentById(String documentId) throws NotFoundException{
         Document d = this.documentRepository.findDocumentByDocumentId(documentId);
         if(d==null)
-            throw new NoContentException();
+            throw new NotFoundException();
         return d;
     }
 }

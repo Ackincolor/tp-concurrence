@@ -14,6 +14,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class DocumentExceptionController extends ResponseEntityExceptionHandler {
     @ExceptionHandler({ConflictException.class,NoContentException.class})
     protected ResponseEntity<ErrorDefinition> conflictExceptionHandler(CustomException e){
-        return new ResponseEntity<>(e.getErrorDefinition(), HttpStatus.CONFLICT);
+        return new ResponseEntity<>(e.getErrorDefinition(), e.getHttpCode());
     }
 }

@@ -4,12 +4,12 @@ import com.ackincolor.tpconcurrence.entities.ErrorDefinition;
 import com.ackincolor.tpconcurrence.entities.ErrorDefinitionErrors;
 import org.springframework.http.HttpStatus;
 
-public class NoContentException extends CustomException {
+public class NotFoundException extends CustomException {
     private ErrorDefinition errorDefinition;
-    public NoContentException(){
+    public NotFoundException(){
         this.errorDefinition = new ErrorDefinition();
         ErrorDefinitionErrors errorDefinitionErrors = new ErrorDefinitionErrors("404","Document non trouvé");
-        this.httpCode = HttpStatus.NO_CONTENT;
+        this.httpCode = HttpStatus.NOT_FOUND;
         this.errorDefinition.addErrorsItem(errorDefinitionErrors);
         this.errorDefinition.setErrorType(ErrorDefinition.ErrorTypeEnum.FUNCTIONAL);
     }

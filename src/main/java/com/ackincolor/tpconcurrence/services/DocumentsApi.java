@@ -3,6 +3,7 @@ package com.ackincolor.tpconcurrence.services;
 
 import com.ackincolor.tpconcurrence.exceptions.ConflictException;
 import com.ackincolor.tpconcurrence.exceptions.NoContentException;
+import com.ackincolor.tpconcurrence.exceptions.NotFoundException;
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -33,7 +34,7 @@ public interface DocumentsApi {
     @RequestMapping(value = "/documents/{documentId}",
             method = RequestMethod.GET,
             produces = "application/json")
-    ResponseEntity<Document> documentsDocumentIdGet(@ApiParam(value = "identifiant du document",required=true) @PathVariable("documentId") String documentId) throws NoContentException;
+    ResponseEntity<Document> documentsDocumentIdGet(@ApiParam(value = "identifiant du document",required=true) @PathVariable("documentId") String documentId) throws NotFoundException;
 
 
     @ApiOperation(value = "supprime le verrou posé", nickname = "documentsDocumentIdLockDelete", notes = "", tags={ "locks", })
