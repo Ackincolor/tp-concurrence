@@ -18,6 +18,11 @@ public class ErrorDefinitionErrors   {
   @JsonProperty("errorMessage")
   private String errorMessage = null;
 
+  public ErrorDefinitionErrors(String code,String error){
+    this.errorCode = code;
+    this.errorMessage = error;
+  }
+
   public ErrorDefinitionErrors errorCode(String errorCode) {
     this.errorCode = errorCode;
     return this;

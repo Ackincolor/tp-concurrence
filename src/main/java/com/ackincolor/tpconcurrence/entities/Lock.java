@@ -4,6 +4,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 
 import java.util.Date;
@@ -18,12 +19,13 @@ public class Lock   {
   @JsonProperty("owner")
   private String owner = null;
 
+  @CreatedDate
   @JsonProperty("created")
   private Date created = null;
 
   @Id
-  @JsonProperty("Id")
-  private String id;
+  @JsonProperty("LockId")
+  private String lockId;
 
   public Lock owner(String owner) {
     this.owner = owner;
@@ -78,5 +80,13 @@ public class Lock   {
     return Objects.equals(this.owner, lock.owner) &&
             Objects.equals(this.created, lock.created);
   }
+
+    public String getLockId() {
+        return lockId;
+    }
+
+    public void setLockId(String lockId) {
+        this.lockId = lockId;
+    }
 }
 
