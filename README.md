@@ -2,11 +2,7 @@
 
 
 
-Implémentation de la spécification Swagger (
-
-[lien]: (https://github.com/gsoing/api-lessons/blob/master/tp/concurrency/swagger.yaml)
-
-) par Loïs GUILLET-ANDRE et Terence WODLING.
+Implémentation de la spécification Swagger ([lien](https://github.com/gsoing/api-lessons/blob/master/tp/concurrency/swagger.yaml)) par Loïs GUILLET-ANDRE et Terence WODLING.
 
 
 
