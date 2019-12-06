@@ -13,6 +13,13 @@ public class NotFoundException extends CustomException {
         this.errorDefinition.addErrorsItem(errorDefinitionErrors);
         this.errorDefinition.setErrorType(ErrorDefinition.ErrorTypeEnum.FUNCTIONAL);
     }
+    public NotFoundException(String msg){
+        this.errorDefinition = new ErrorDefinition();
+        ErrorDefinitionErrors errorDefinitionErrors = new ErrorDefinitionErrors("404",msg);
+        this.httpCode = HttpStatus.NOT_FOUND;
+        this.errorDefinition.addErrorsItem(errorDefinitionErrors);
+        this.errorDefinition.setErrorType(ErrorDefinition.ErrorTypeEnum.FUNCTIONAL);
+    }
     public ErrorDefinition getErrorDefinition(){
         return this.errorDefinition;
     }

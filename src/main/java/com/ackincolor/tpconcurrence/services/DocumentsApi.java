@@ -40,11 +40,11 @@ public interface DocumentsApi {
 
     @ApiOperation(value = "supprime le verrou posé", nickname = "documentsDocumentIdLockDelete", notes = "", tags={ "locks", })
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "le verrou est supprimé") })
+            @ApiResponse(code = 202, message = "le verrou est supprimé") })
     @RequestMapping(value = "/documents/{documentId}/lock",
             method = RequestMethod.DELETE,
             produces = "application/json")
-    ResponseEntity<Void> documentsDocumentIdLockDelete(@ApiParam(value = "identifiant du document",required=true) @PathVariable("documentId") String documentId) throws NoContentException,BadRequestException;
+    ResponseEntity<String> documentsDocumentIdLockDelete(@ApiParam(value = "identifiant du document",required=true) @PathVariable("documentId") String documentId) throws NotFoundException,BadRequestException;
 
 
     @ApiOperation(value = "retourne le verrou posé sur le document si présent", nickname = "documentsDocumentIdLockGet", notes = "", response = Lock.class, tags={ "locks", })

@@ -92,11 +92,11 @@ public class DocumentsService {
             throw new NoContentException();
         return l;
     }
-    public void removeLockOnDocument(String documentId) throws NoContentException{
+    public void removeLockOnDocument(String documentId) throws NotFoundException{
         if(this.lockRepository.existsById(documentId)){
             this.lockRepository.deleteById(documentId);
         }else{
-            throw new NoContentException();
+            throw new NotFoundException("Le document n'est pas bloqué");
         }
     }
     public Document findDocumentById(String documentId) throws NotFoundException{

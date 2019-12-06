@@ -61,11 +61,11 @@ public class DocumentsApiController implements DocumentsApi {
         throw new BadRequestException();
     }
 
-    public ResponseEntity<Void> documentsDocumentIdLockDelete(@ApiParam(value = "identifiant du document",required=true) @PathVariable("documentId") String documentId) throws NoContentException,BadRequestException{
+    public ResponseEntity<String> documentsDocumentIdLockDelete(@ApiParam(value = "identifiant du document",required=true) @PathVariable("documentId") String documentId) throws NotFoundException,BadRequestException{
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             this.documentsService.removeLockOnDocument(documentId);
-            return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<String>("Verou supprimé",HttpStatus.ACCEPTED);
         }
         throw new BadRequestException();
     }
