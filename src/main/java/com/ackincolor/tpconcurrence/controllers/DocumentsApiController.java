@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import springfox.documentation.spring.web.json.Json;
 
 @Controller
 @CrossOrigin(origins = "*")
@@ -65,7 +66,7 @@ public class DocumentsApiController implements DocumentsApi {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             this.documentsService.removeLockOnDocument(documentId);
-            return new ResponseEntity<String>("Verou supprimé",HttpStatus.ACCEPTED);
+            return new ResponseEntity<String>("{\"result\":\"Verou supprimé\"}",HttpStatus.ACCEPTED);
         }
         throw new BadRequestException();
     }
