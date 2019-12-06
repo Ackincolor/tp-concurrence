@@ -8,4 +8,4 @@ Implémentation de la spécification Swagger ([lien](https://github.com/gsoing/a
 
 OptimisticLock : Utilisation de l'annotation @Version
 
-PesimisticLock : Utilisation du Modèle "Lock" pour permettre le blocaged'un document.
+PesimisticLock : Utilisation du Modèle "Lock" pour permettre le blocage d'un document.

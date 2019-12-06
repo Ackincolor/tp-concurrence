@@ -1,6 +1,7 @@
 package com.ackincolor.tpconcurrence.controllers;
 
 
+import com.ackincolor.tpconcurrence.exceptions.BadRequestException;
 import com.ackincolor.tpconcurrence.exceptions.ConflictException;
 import com.ackincolor.tpconcurrence.exceptions.NoContentException;
 import com.ackincolor.tpconcurrence.exceptions.NotFoundException;
@@ -52,46 +53,45 @@ public class DocumentsApiController implements DocumentsApi {
         this.lockList = new HashMap<>();
     }
 
-    public ResponseEntity<Document> documentsDocumentIdGet(@ApiParam(value = "identifiant du document",required=true) @PathVariable("documentId") String documentId) throws NotFoundException {
+    public ResponseEntity<Document> documentsDocumentIdGet(@ApiParam(value = "identifiant du document",required=true) @PathVariable("documentId") String documentId) throws NotFoundException,BadRequestException {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             return new ResponseEntity<>( this.documentsService.findDocumentById(documentId),HttpStatus.OK);
         }
-
-        return new ResponseEntity<Document>(HttpStatus.NOT_IMPLEMENTED);
+        throw new BadRequestException();
     }
 
-    public ResponseEntity<Void> documentsDocumentIdLockDelete(@ApiParam(value = "identifiant du document",required=true) @PathVariable("documentId") String documentId) throws NoContentException{
+    public ResponseEntity<Void> documentsDocumentIdLockDelete(@ApiParam(value = "identifiant du document",required=true) @PathVariable("documentId") String documentId) throws NoContentException,BadRequestException{
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             this.documentsService.removeLockOnDocument(documentId);
             return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+        throw new BadRequestException();
     }
 
-    public ResponseEntity<Lock> documentsDocumentIdLockGet(@ApiParam(value = "identifiant du document",required=true) @PathVariable("documentId") String documentId) throws NoContentException {
+    public ResponseEntity<Lock> documentsDocumentIdLockGet(@ApiParam(value = "identifiant du document",required=true) @PathVariable("documentId") String documentId) throws NoContentException ,BadRequestException {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
                 return new ResponseEntity<>( this.documentsService.getLockOfDocument(documentId),HttpStatus.OK);
         }
-        return new ResponseEntity<Lock>(HttpStatus.NOT_IMPLEMENTED);
+        throw new BadRequestException();
     }
 
-    public ResponseEntity<Lock> documentsDocumentIdLockPut(@ApiParam(value = "identifiant du document",required=true) @PathVariable("documentId") String documentId,@ApiParam(value = "l'objet verrou posé"  )  @RequestBody Lock lock) throws ConflictException, NoContentException {
+    public ResponseEntity<Lock> documentsDocumentIdLockPut(@ApiParam(value = "identifiant du document",required=true) @PathVariable("documentId") String documentId,@ApiParam(value = "l'objet verrou posé"  )  @RequestBody Lock lock) throws ConflictException, NoContentException ,BadRequestException{
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             return new ResponseEntity<Lock>(this.documentsService.lockDocument(documentId,lock),HttpStatus.OK);
         }
-        return new ResponseEntity<Lock>(HttpStatus.NOT_IMPLEMENTED);
+        throw new BadRequestException();
     }
 
-    public ResponseEntity<Document> documentsDocumentIdPost(@ApiParam(value = "identifiant du document",required=true) @PathVariable("documentId") String documentId,@ApiParam(value = "met à jour le texte, le titre, l'editeur et la date de mise à jour"  )  @RequestBody Document document) throws ConflictException {
+    public ResponseEntity<Document> documentsDocumentIdPost(@ApiParam(value = "identifiant du document",required=true) @PathVariable("documentId") String documentId,@ApiParam(value = "met à jour le texte, le titre, l'editeur et la date de mise à jour"  )  @RequestBody Document document) throws ConflictException,BadRequestException {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             return new ResponseEntity<Document>(this.documentsService.updateDocument(document,documentId), HttpStatus.OK);
         }
-        return new ResponseEntity<Document>(HttpStatus.NOT_IMPLEMENTED);
+        throw new BadRequestException();
     }
 
     public ResponseEntity<DocumentsList> documentsGet(@ApiParam(value = "numéro de la page à retourner") @RequestParam(value = "page", required = false) Integer page, @ApiParam(value = "nombre de documents par page") @RequestParam(value = "pageSize", required = false) Integer pageSize) {
@@ -105,21 +105,16 @@ public class DocumentsApiController implements DocumentsApi {
                 return new ResponseEntity<DocumentsList>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
-
         return new ResponseEntity<DocumentsList>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<Document> documentsPost(@ApiParam(value = "Document" ,required=true ) @RequestBody Document document) {
+    public ResponseEntity<Document> documentsPost(@ApiParam(value = "Document" ,required=true ) @RequestBody Document document) throws BadRequestException{
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            try {
                 return new ResponseEntity<Document>(this.documentsService.saveDocument(document), HttpStatus.OK);
-            } catch (Exception e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<Document>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+        }else{
+            throw new BadRequestException();
         }
-        return new ResponseEntity<Document>(HttpStatus.NOT_IMPLEMENTED);
     }
 
 }

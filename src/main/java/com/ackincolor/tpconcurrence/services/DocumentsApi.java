@@ -1,6 +1,7 @@
 package com.ackincolor.tpconcurrence.services;
 
 
+import com.ackincolor.tpconcurrence.exceptions.BadRequestException;
 import com.ackincolor.tpconcurrence.exceptions.ConflictException;
 import com.ackincolor.tpconcurrence.exceptions.NoContentException;
 import com.ackincolor.tpconcurrence.exceptions.NotFoundException;
@@ -34,7 +35,7 @@ public interface DocumentsApi {
     @RequestMapping(value = "/documents/{documentId}",
             method = RequestMethod.GET,
             produces = "application/json")
-    ResponseEntity<Document> documentsDocumentIdGet(@ApiParam(value = "identifiant du document",required=true) @PathVariable("documentId") String documentId) throws NotFoundException;
+    ResponseEntity<Document> documentsDocumentIdGet(@ApiParam(value = "identifiant du document",required=true) @PathVariable("documentId") String documentId) throws NotFoundException,BadRequestException;
 
 
     @ApiOperation(value = "supprime le verrou posé", nickname = "documentsDocumentIdLockDelete", notes = "", tags={ "locks", })
@@ -43,7 +44,7 @@ public interface DocumentsApi {
     @RequestMapping(value = "/documents/{documentId}/lock",
             method = RequestMethod.DELETE,
             produces = "application/json")
-    ResponseEntity<Void> documentsDocumentIdLockDelete(@ApiParam(value = "identifiant du document",required=true) @PathVariable("documentId") String documentId) throws NoContentException;
+    ResponseEntity<Void> documentsDocumentIdLockDelete(@ApiParam(value = "identifiant du document",required=true) @PathVariable("documentId") String documentId) throws NoContentException,BadRequestException;
 
 
     @ApiOperation(value = "retourne le verrou posé sur le document si présent", nickname = "documentsDocumentIdLockGet", notes = "", response = Lock.class, tags={ "locks", })
@@ -53,7 +54,7 @@ public interface DocumentsApi {
     @RequestMapping(value = "/documents/{documentId}/lock",
             method = RequestMethod.GET,
             produces = "application/json")
-    ResponseEntity<Lock> documentsDocumentIdLockGet(@ApiParam(value = "identifiant du document",required=true) @PathVariable("documentId") String documentId) throws NoContentException ;
+    ResponseEntity<Lock> documentsDocumentIdLockGet(@ApiParam(value = "identifiant du document",required=true) @PathVariable("documentId") String documentId) throws NoContentException ,BadRequestException;
 
 
     @ApiOperation(value = "pose un verrou sur le document", nickname = "documentsDocumentIdLockPut", notes = "l'utilisateur peut poser un verrou si aucun n'autre n'est posé ", response = Lock.class, tags={ "locks", })
@@ -63,7 +64,7 @@ public interface DocumentsApi {
     @RequestMapping(value = "/documents/{documentId}/lock",
             method = RequestMethod.PUT,
             produces = "application/json")
-    ResponseEntity<Lock> documentsDocumentIdLockPut(@ApiParam(value = "identifiant du document",required=true) @PathVariable("documentId") String documentId,@ApiParam(value = "l'objet verrou posé"  )  @Valid @RequestBody Lock lock) throws ConflictException, NoContentException;
+    ResponseEntity<Lock> documentsDocumentIdLockPut(@ApiParam(value = "identifiant du document",required=true) @PathVariable("documentId") String documentId,@ApiParam(value = "l'objet verrou posé"  )  @Valid @RequestBody Lock lock) throws ConflictException, NoContentException,BadRequestException;
 
     //ok
     @ApiOperation(value = "mise à jour du document", nickname = "documentsDocumentIdPost", notes = "met à jour le document si l'utilisateur possède la dernière version et que personne n'a posé de verrou ", response = Document.class, tags={ "documents", })
@@ -72,7 +73,7 @@ public interface DocumentsApi {
     @RequestMapping(value = "/documents/{documentId}",
             method = RequestMethod.POST,
             produces = "application/json")
-    ResponseEntity<Document> documentsDocumentIdPost(@ApiParam(value = "identifiant du document",required=true) @PathVariable("documentId") String documentId,@ApiParam(value = "met à jour le texte, le titre, l'editeur et la date de mise à jour"  )  @Valid @RequestBody Document document)throws ConflictException;
+    ResponseEntity<Document> documentsDocumentIdPost(@ApiParam(value = "identifiant du document",required=true) @PathVariable("documentId") String documentId,@ApiParam(value = "met à jour le texte, le titre, l'editeur et la date de mise à jour"  )  @Valid @RequestBody Document document)throws ConflictException, BadRequestException;
 
     //ok
     @ApiOperation(value = "retourne tous les documents, pas de filtrage", nickname = "documentsGet", notes = "", response = DocumentsList.class, tags={ "documents", })
@@ -92,6 +93,6 @@ public interface DocumentsApi {
     @RequestMapping(value = "/documents",
             method = RequestMethod.POST,
             produces = "application/json")
-    ResponseEntity<Document> documentsPost(@ApiParam(value = "Document" ,required=true )  @Valid @RequestBody Document document);
+    ResponseEntity<Document> documentsPost(@ApiParam(value = "Document" ,required=true )  @Valid @RequestBody Document document) throws BadRequestException;
 
 }
