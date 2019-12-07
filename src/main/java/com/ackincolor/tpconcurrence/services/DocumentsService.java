@@ -48,13 +48,34 @@ public class DocumentsService {
     public Document updateDocument(Document document, String documentId) throws ConflictException{
         Document test = this.documentRepository.findDocumentByDocumentId(documentId);
         Lock l = this.lockRepository.findByLockId(documentId);
-        //Lock l = this.lockList.get(documentId);
-        //si l'editeur a posé un verou
-        if((l==null || l.getOwner().equals(document.getEditor()))&&test!=null) {
-            //mise a jour avec verification de la version
+        if(l==null&&test!=null){
+            l = new Lock();
+            l.setLockId(test.getDocumentId());
+            l.setOwner(test.getEditor());
+            this.lockRepository.save(l);
             if(test.getEtag()>document.getEtag()){
                 //raiseException
-                throw new ConflictException();
+                try {
+                    this.removeLockOnDocument(documentId);
+                } catch (NotFoundException e) {
+                    e.printStackTrace();
+                }
+                throw new ConflictException("Une version du document plus récente existe déjà",null);
+                //return new ResponseEntity<Document>(document, HttpStatus.CONFLICT);
+            }else {
+                document.setDocumentId(documentId);
+                this.documentRepository.save(document);
+                try {
+                    this.removeLockOnDocument(documentId);
+                } catch (NotFoundException e) {
+                    e.printStackTrace();
+                }
+                return document;
+            }
+        }else if( l.getOwner().equals(document.getEditor())){
+            if(test.getEtag()>document.getEtag()){
+                //raiseException
+                throw new ConflictException("Une version du document plus récente existe déjà",null);
                 //return new ResponseEntity<Document>(document, HttpStatus.CONFLICT);
             }else {
                 document.setDocumentId(documentId);
@@ -62,7 +83,6 @@ public class DocumentsService {
                 return document;
             }
         }else{
-            //raise exception
             throw new ConflictException();
         }
     }

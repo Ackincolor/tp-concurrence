@@ -16,7 +16,11 @@ public class ConflictException extends CustomException {
     }
     public ConflictException(String message, Lock l) {
         this.errorDefinition = new ErrorDefinition();
-        ErrorDefinitionErrors err = new ErrorDefinitionErrors("409",message+ l.getOwner());
+        ErrorDefinitionErrors err;
+        if(l!=null)
+            err = new ErrorDefinitionErrors("409",message+ l.getOwner());
+        else
+            err = new ErrorDefinitionErrors("409", message);
         this.errorDefinition.setErrorType(ErrorDefinition.ErrorTypeEnum.FUNCTIONAL);
         this.errorDefinition.addErrorsItem(err);
         this.httpCode = HttpStatus.CONFLICT;
